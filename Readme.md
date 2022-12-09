@@ -3,6 +3,9 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T213968)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
+
+# WPF Rich Text Editor API – How to Process Word Documents in Code
+
 The [WPF Rich Text Editor Control](https://www.devexpress.com/products/net/controls/wpf/rich_editor/) allows you to deliver Microsoft Word-inspired functionality with ease. It includes comprehensive text formatting options, supports mail merge, and ships with a rich collection of end-user options you can use to create high-impact document processing solutions.
 
 This example demonstrates how to use the Rich Text Editor to execute the following actions:
