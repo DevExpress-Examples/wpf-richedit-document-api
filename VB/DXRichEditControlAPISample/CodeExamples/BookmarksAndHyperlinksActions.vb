@@ -1,4 +1,4 @@
-﻿Imports DevExpress.XtraRichEdit
+Imports DevExpress.XtraRichEdit
 Imports DevExpress.XtraRichEdit.API.Native
 Imports System
 Imports System.Collections.Generic
@@ -7,28 +7,30 @@ Imports System.Text
 Imports System.Threading.Tasks
 
 Namespace DXRichEditControlAPISample.CodeExamples
+
     Friend Class BookmarksAndHyperlinksActions
-        Private Shared Sub InsertBookmark(ByVal document As Document)
-'            #Region "#InsertBookmark"
-            document.LoadDocument("Grimm.docx", DocumentFormat.OpenXml)
+
+        Private Shared Sub InsertBookmark(ByVal document As DevExpress.XtraRichEdit.API.Native.Document)
+'#Region "#InsertBookmark"
+            document.LoadDocument("Grimm.docx", DevExpress.XtraRichEdit.DocumentFormat.OpenXml)
             document.BeginUpdate()
-            Dim pos As DocumentPosition = document.Range.Start
+            Dim pos As DevExpress.XtraRichEdit.API.Native.DocumentPosition = document.Range.Start
             document.Bookmarks.Create(document.CreateRange(pos, 0), "Top")
             'Insert the hyperlink anchored to the created bookmark:
-            Dim pos1 As DocumentPosition = document.CreatePosition((document.Range.End).ToInt() + 25)
+            Dim pos1 As DevExpress.XtraRichEdit.API.Native.DocumentPosition = document.CreatePosition((document.Range.[End]).ToInt() + 25)
             document.Hyperlinks.Create(document.InsertText(pos1, "get to the top"))
-            document.Hyperlinks(0).Anchor = "Top"
+            document.Hyperlinks(CInt((0))).Anchor = "Top"
             document.EndUpdate()
-'            #End Region ' #InsertBookmark
+'#End Region  ' #InsertBookmark
         End Sub
-        Private Shared Sub InsertHyperlink(ByVal document As Document)
-'            #Region "#InsertHyperlink"
-            Dim hPos As DocumentPosition = document.Range.Start
+
+        Private Shared Sub InsertHyperlink(ByVal document As DevExpress.XtraRichEdit.API.Native.Document)
+'#Region "#InsertHyperlink"
+            Dim hPos As DevExpress.XtraRichEdit.API.Native.DocumentPosition = document.Range.Start
             document.Hyperlinks.Create(document.InsertText(hPos, "Follow me!"))
-            document.Hyperlinks(0).NavigateUri = "https://www.devexpress.com/Products/NET/Controls/WinForms/Rich_Editor/"
-            document.Hyperlinks(0).ToolTip = "WinForms Rich Text Editor"
-'            #End Region ' #InsertHyperlink
+            document.Hyperlinks(CInt((0))).NavigateUri = "https://www.devexpress.com/Products/NET/Controls/WinForms/Rich_Editor/"
+            document.Hyperlinks(CInt((0))).ToolTip = "WinForms Rich Text Editor"
+'#End Region  ' #InsertHyperlink
         End Sub
     End Class
 End Namespace
-
