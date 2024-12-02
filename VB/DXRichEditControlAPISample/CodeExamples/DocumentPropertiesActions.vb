@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
@@ -7,66 +7,60 @@ Imports DevExpress.XtraRichEdit.API.Native
 Imports DevExpress.Xpf.RichEdit
 
 Namespace DXRichEditControlAPISample.CodeExamples
-	Friend Class DocumentPropertiesActions
-		Private Shared Sub StandardDocumentProperties(ByVal document As Document)
-'			#Region "#StandardDocumentProperties"
-			document.BeginUpdate()
 
-			document.DocumentProperties.Creator = "John Doe"
-			document.DocumentProperties.Title = "Inserting Custom Properties"
-			document.DocumentProperties.Category = "TestDoc"
-			document.DocumentProperties.Description = "This code demonstrates API to modify and display standard document properties."
+    Friend Class DocumentPropertiesActions
 
-			document.Fields.Create(document.AppendText(vbLf & "AUTHOR: ").End, "AUTHOR")
-			document.Fields.Create(document.AppendText(vbLf & "TITLE: ").End, "TITLE")
-			document.Fields.Create(document.AppendText(vbLf & "COMMENTS: ").End, "COMMENTS")
-			document.Fields.Create(document.AppendText(vbLf & "CREATEDATE: ").End, "CREATEDATE")
-			document.Fields.Create(document.AppendText(vbLf & "Category: ").End, "DOCPROPERTY Category")
-			document.Fields.Update()
-			document.EndUpdate()
-'			#End Region ' #StandardDocumentProperties
-		End Sub
+        Private Shared Sub StandardDocumentProperties(ByVal document As DevExpress.XtraRichEdit.API.Native.Document)
+#Region "#StandardDocumentProperties"
+            document.BeginUpdate()
+            document.DocumentProperties.Creator = "John Doe"
+            document.DocumentProperties.Title = "Inserting Custom Properties"
+            document.DocumentProperties.Category = "TestDoc"
+            document.DocumentProperties.Description = "This code demonstrates API to modify and display standard document properties."
+            document.Fields.Create(document.AppendText(CStr((Global.Microsoft.VisualBasic.Constants.vbLf & "AUTHOR: "))).[End], "AUTHOR")
+            document.Fields.Create(document.AppendText(CStr((Global.Microsoft.VisualBasic.Constants.vbLf & "TITLE: "))).[End], "TITLE")
+            document.Fields.Create(document.AppendText(CStr((Global.Microsoft.VisualBasic.Constants.vbLf & "COMMENTS: "))).[End], "COMMENTS")
+            document.Fields.Create(document.AppendText(CStr((Global.Microsoft.VisualBasic.Constants.vbLf & "CREATEDATE: "))).[End], "CREATEDATE")
+            document.Fields.Create(document.AppendText(CStr((Global.Microsoft.VisualBasic.Constants.vbLf & "Category: "))).[End], "DOCPROPERTY Category")
+            document.Fields.Update()
+            document.EndUpdate()
+#End Region  ' #StandardDocumentProperties
+        End Sub
 
+        Private Shared Sub CustomDocumentProperties(ByVal document As DevExpress.XtraRichEdit.API.Native.Document)
+#Region "#CustomDocumentProperties"
+            document.BeginUpdate()
+            document.AppendText("A new value of MyBookmarkProperty is obtained from here: NEWVALUE!" & Global.Microsoft.VisualBasic.Constants.vbLf)
+            document.Bookmarks.Create(document.FindAll("NEWVALUE!", DevExpress.XtraRichEdit.API.Native.SearchOptions.CaseSensitive)(0), "bmOne")
+            document.AppendText(Global.Microsoft.VisualBasic.Constants.vbLf & "MyNumericProperty: ")
+            document.Fields.Create(document.Range.[End], "DOCVARIABLE CustomProperty MyNumericProperty")
+            document.AppendText(Global.Microsoft.VisualBasic.Constants.vbLf & "MyStringProperty: ")
+            document.Fields.Create(document.Range.[End], "DOCVARIABLE CustomProperty MyStringProperty")
+            document.AppendText(Global.Microsoft.VisualBasic.Constants.vbLf & "MyBooleanProperty: ")
+            document.Fields.Create(document.Range.[End], "DOCVARIABLE CustomProperty MyBooleanProperty")
+            document.AppendText(Global.Microsoft.VisualBasic.Constants.vbLf & "MyBookmarkProperty: ")
+            document.Fields.Create(document.Range.[End], "DOCVARIABLE CustomProperty MyBookmarkProperty")
+            document.EndUpdate()
+            document.CustomProperties("MyNumericProperty") = 123.45
+            document.CustomProperties("MyStringProperty") = "The Final Answer"
+            document.CustomProperties("MyBookmarkProperty") = document.Bookmarks(0)
+            document.CustomProperties("MyBooleanProperty") = True
+            AddHandler document.CalculateDocumentVariable, AddressOf DXRichEditControlAPISample.CodeExamples.DocumentPropertiesActions.DocumentPropertyDisplayHelper.OnCalculateDocumentVariable
+            document.Fields.Update()
+#End Region  ' #CustomDocumentProperties
+        End Sub
 
-		Private Shared Sub CustomDocumentProperties(ByVal document As Document)
-'			#Region "#CustomDocumentProperties"
-			document.BeginUpdate()
-			document.AppendText("A new value of MyBookmarkProperty is obtained from here: NEWVALUE!" & vbLf)
-			document.Bookmarks.Create(document.FindAll("NEWVALUE!", SearchOptions.CaseSensitive)(0), "bmOne")
-			document.AppendText(vbLf & "MyNumericProperty: ")
-			document.Fields.Create(document.Range.End, "DOCVARIABLE CustomProperty MyNumericProperty")
-			document.AppendText(vbLf & "MyStringProperty: ")
-			document.Fields.Create(document.Range.End, "DOCVARIABLE CustomProperty MyStringProperty")
-			document.AppendText(vbLf & "MyBooleanProperty: ")
-			document.Fields.Create(document.Range.End, "DOCVARIABLE CustomProperty MyBooleanProperty")
-			document.AppendText(vbLf & "MyBookmarkProperty: ")
-			document.Fields.Create(document.Range.End, "DOCVARIABLE CustomProperty MyBookmarkProperty")
-			document.EndUpdate()
+#Region "#@CustomDocumentProperties"
+        Private Class DocumentPropertyDisplayHelper
 
-			document.CustomProperties("MyNumericProperty") = 123.45
-			document.CustomProperties("MyStringProperty") = "The Final Answer"
-			document.CustomProperties("MyBookmarkProperty") = document.Bookmarks(0)
-			document.CustomProperties("MyBooleanProperty") = True
-
-			AddHandler document.CalculateDocumentVariable, AddressOf DocumentPropertyDisplayHelper.OnCalculateDocumentVariable
-			document.Fields.Update()
-'			#End Region ' #CustomDocumentProperties
-		End Sub
-
-		#Region "#@CustomDocumentProperties"
-		Private Class DocumentPropertyDisplayHelper
-			Public Shared Sub OnCalculateDocumentVariable(ByVal sender As Object, ByVal e As DevExpress.XtraRichEdit.CalculateDocumentVariableEventArgs)
-				If e.Arguments.Count = 0 OrElse e.VariableName <> "CustomProperty" Then
-					Return
-				End If
-				Dim name As String = e.Arguments(0).Value
-				Dim customProperty = DirectCast(sender, DevExpress.Xpf.RichEdit.RichEditControl).Document.CustomProperties(name)
-				If customProperty IsNot Nothing Then
-					e.Value = customProperty.ToString()
-				End If
-				e.Handled = True
-			End Sub
-		End Class
-		#End Region ' #@CustomDocumentProperties
-	End Class
+            Public Shared Sub OnCalculateDocumentVariable(ByVal sender As Object, ByVal e As DevExpress.XtraRichEdit.CalculateDocumentVariableEventArgs)
+                If e.Arguments.Count = 0 OrElse Not Equals(e.VariableName, "CustomProperty") Then Return
+                Dim name As String = e.Arguments(CInt((0))).Value
+                Dim customProperty = CType(sender, DevExpress.Xpf.RichEdit.RichEditControl).Document.CustomProperties(name)
+                If customProperty IsNot Nothing Then e.Value = customProperty.ToString()
+                e.Handled = True
+            End Sub
+        End Class
+#End Region  ' #@CustomDocumentProperties
+    End Class
 End Namespace
