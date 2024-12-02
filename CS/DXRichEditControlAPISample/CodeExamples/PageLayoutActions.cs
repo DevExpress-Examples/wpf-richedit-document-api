@@ -65,5 +65,50 @@ namespace DXRichEditControlAPISample.CodeExamples
             document.Paragraphs[0].EndUpdateTabs(tabs);
             #endregion #TabStops
         }
+        static void CreatePageBorders(Document document)
+        {
+            #region #CreatePageBorders
+            // Generate a document with two sections and multiple pages in each section.
+            document.AppendText("\f\f\f");
+            document.Paragraphs.Append();
+            document.AppendSection();
+            document.AppendText("\f\f");
+
+            Section firstSection = document.Sections[0];
+            SectionPageBorders pageBorders1 = firstSection.PageBorders;
+
+            // Set page borders for the first page of the first section.
+            PageBorderHelper.SetPageBorders(pageBorders1.LeftBorder, BorderLineStyle.Single, 1f, System.Drawing.Color.Red);
+            PageBorderHelper.SetPageBorders(pageBorders1.TopBorder, BorderLineStyle.Single, 1f, System.Drawing.Color.Red);
+            PageBorderHelper.SetPageBorders(pageBorders1.RightBorder, BorderLineStyle.Single, 1f, System.Drawing.Color.Red);
+            PageBorderHelper.SetPageBorders(pageBorders1.BottomBorder, BorderLineStyle.Single, 1f, System.Drawing.Color.Red);
+            pageBorders1.AppliesTo = PageBorderAppliesTo.FirstPage;
+
+            Section secondSection = document.Sections[1];
+            SectionPageBorders pageBorders2 = secondSection.PageBorders;
+
+            // Set page borders for all pages of the second section.
+            PageBorderHelper.SetPageBorders(pageBorders2.LeftBorder, BorderLineStyle.Double, 1.5f, System.Drawing.Color.Green);
+            PageBorderHelper.SetPageBorders(pageBorders2.TopBorder, BorderLineStyle.Double, 1.5f, System.Drawing.Color.Green);
+            PageBorderHelper.SetPageBorders(pageBorders2.RightBorder, BorderLineStyle.Double, 1.5f, System.Drawing.Color.Green);
+            PageBorderHelper.SetPageBorders(pageBorders2.BottomBorder, BorderLineStyle.Double, 1.5f, System.Drawing.Color.Green);
+            pageBorders2.AppliesTo = PageBorderAppliesTo.AllPages;
+            pageBorders2.ZOrder = PageBorderZOrder.Back;
+            #endregion #CreatePageBorders
+
+        }
+        #region #@CreatePageBorders
+        class PageBorderHelper
+        {
+            public static void SetPageBorders(PageBorder border, BorderLineStyle lineStyle,
+            float borderWidth, System.Drawing.Color color)
+            {
+                border.LineStyle = lineStyle;
+                border.LineWidth = borderWidth;
+                border.LineColor = color;
+            }
+        }
+        #endregion #@CreatePageBorders
     }
 }
+

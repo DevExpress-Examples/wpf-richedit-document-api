@@ -77,5 +77,47 @@ namespace DXRichEditControlAPISample.CodeExamples
             document.EndUpdateParagraphs(cp);
             #endregion #ResetParagraphFormatting
         }
+        static void FormatParagraphBorders(Document document)
+        {
+            #region #FormatParagraphBorders
+            // Start to edit the document.
+            document.BeginUpdate();
+
+            // Append text to the document.
+            document.AppendText(String.Format("Modified Paragraph" +
+                Environment.NewLine + "Normal" + Environment.NewLine + "Normal"));
+
+            // Finalize to edit the document.
+            document.EndUpdate();
+
+            // Obtain the first and last paragraph ranges
+            Paragraph firstParagraph = document.Paragraphs[0];
+            Paragraph thirdParagraph = document.Paragraphs[2];
+            DocumentRange paragraphRange = document.CreateRange(firstParagraph.Range.Start,
+                            thirdParagraph.Range.End.ToInt() - firstParagraph.Range.Start.ToInt());
+
+            // Start to edit the paragraph.
+            ParagraphProperties pp = document.BeginUpdateParagraphs(paragraphRange);
+            BorderHelper.SetBorder(pp.Borders.HorizontalBorder);
+            BorderHelper.SetBorder(pp.Borders.BottomBorder);
+            BorderHelper.SetBorder(pp.Borders.TopBorder);
+            BorderHelper.SetBorder(pp.Borders.LeftBorder);
+            BorderHelper.SetBorder(pp.Borders.RightBorder);
+
+            // Finalize to edit the paragraph.
+            document.EndUpdateParagraphs(pp);
+            #endregion #FormatParagraphBorders
+        }
+        #region #@FormatParagraphBorders
+        class BorderHelper
+        {
+            public static void SetBorder(ParagraphBorder border)
+            {
+                border.LineWidth = 2f;
+                border.LineStyle = BorderLineStyle.Thick;
+                border.LineColor = Color.SteelBlue;
+            }
+        }
+        #endregion #@FormatParagraphBorders
     }
 }
