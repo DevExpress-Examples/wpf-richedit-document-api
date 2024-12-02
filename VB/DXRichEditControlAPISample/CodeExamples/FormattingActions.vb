@@ -61,7 +61,7 @@ Namespace DXRichEditControlAPISample.CodeExamples
 		End Sub
 
 		Private Sub ResetParagraphFormatting(ByVal document As Document)
-'			#Region "#ResetParagraphFormatting"
+			'			#Region "#ResetParagraphFormatting"
 			document.LoadDocument("Documents//Grimm.docx", DevExpress.XtraRichEdit.DocumentFormat.OpenXml)
 			' Set alignment and indentation of the first line in the first paragraph to default. 
 			' Other paragraph properties remain intact.
@@ -69,7 +69,44 @@ Namespace DXRichEditControlAPISample.CodeExamples
 			Dim cp As ParagraphProperties = document.BeginUpdateParagraphs(range)
 			cp.Reset(ParagraphPropertiesMask.Alignment Or ParagraphPropertiesMask.FirstLineIndent)
 			document.EndUpdateParagraphs(cp)
-'			#End Region ' #ResetParagraphFormatting
+			'			#End Region ' #ResetParagraphFormatting
 		End Sub
+		Private Sub FormatParagraphBorders(ByVal document As Document)
+			'			#Region "#FormatParagraphBorders"
+			' Start to edit the document.
+			document.BeginUpdate()
+
+			' Append text to the document.
+			document.AppendText(String.Format("Modified Paragraph" & Environment.NewLine & "Normal" & Environment.NewLine & "Normal"))
+
+			' Finalize to edit the document.
+			document.EndUpdate()
+
+			' Obtain the first and last paragraph ranges
+			Dim firstParagraph As Paragraph = document.Paragraphs(0)
+			Dim thirdParagraph As Paragraph = document.Paragraphs(2)
+			Dim paragraphRange As DocumentRange = document.CreateRange(firstParagraph.Range.Start, thirdParagraph.Range.End.ToInt() - firstParagraph.Range.Start.ToInt())
+
+			' Start to edit the paragraph.
+			Dim pp As ParagraphProperties = document.BeginUpdateParagraphs(paragraphRange)
+			BorderHelper.SetBorder(pp.Borders.HorizontalBorder)
+			BorderHelper.SetBorder(pp.Borders.BottomBorder)
+			BorderHelper.SetBorder(pp.Borders.TopBorder)
+			BorderHelper.SetBorder(pp.Borders.LeftBorder)
+			BorderHelper.SetBorder(pp.Borders.RightBorder)
+
+			' Finalize to edit the paragraph.
+			document.EndUpdateParagraphs(pp)
+			'			#End Region ' #FormatParagraphBorders
+		End Sub
+#Region "#@FormatParagraphBorders"
+		Friend Class BorderHelper
+			Public Shared Sub SetBorder(ByVal border As ParagraphBorder)
+				border.LineWidth = 2.0F
+				border.LineStyle = BorderLineStyle.Thick
+				border.LineColor = Color.SteelBlue
+			End Sub
+		End Class
+#End Region ' #@FormatParagraphBorders
 	End Module
 End Namespace
