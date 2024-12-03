@@ -111,7 +111,7 @@ Namespace DXRichEditControlAPISample
 			treeList1.View.ExpandAllNodes()
 
 			If treeList1.View.Nodes.Count > 0 Then
-				treeList1.View.FocusedNode = treeList1.View.Nodes(0).Nodes.First()
+				treeList1.View.FocusedNode = treeList1.View.Nodes(0)
 			End If
 		End Sub
 
